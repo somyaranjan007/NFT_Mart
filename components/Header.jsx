@@ -3,13 +3,30 @@ import Logo from "@/assets/NFT_Logo.jpg";
 import Image from "next/image";
 import Link from "next/link";
 import { useWeb3Modal, useWalletInfo } from "@web3modal/wagmi/react";
-import { useAccount } from 'wagmi'
+import { useAccount } from 'wagmi';
+import { useAppSelector, useAppDispatch } from "@/lib/hooks";
+import { createContractCredentials } from "@/lib/features/contractCredentialSlice";
+import { useEffect } from "react";
 
 const Header = () => {
 
     const { open } = useWeb3Modal();
     const { walletInfo } = useWalletInfo();
-    const { address, isConnected } = useAccount();
+    const { address, isConnected, chain } = useAccount();
+
+    const dispatch = useAppDispatch();
+    const contract = useAppSelector(state => state.contract);
+
+    useEffect(() => {
+        if (!chain?.id) return
+        const chainConfiguration = {
+            chainId: chain?.id,
+            rpcUrl: chain?.rpcUrls.default.http[0]
+        }
+        dispatch(createContractCredentials(chainConfiguration));
+    }, [chain?.id])
+
+    console.log(contract)
 
     return (
         <div className="py-5 px-56 flex items-center justify-between">
