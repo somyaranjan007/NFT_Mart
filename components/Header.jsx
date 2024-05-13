@@ -15,7 +15,9 @@ const Header = () => {
     const { address, isConnected, chain } = useAccount();
 
     const dispatch = useAppDispatch();
+    
     const contract = useAppSelector(state => state.contract);
+    console.log(contract);
 
     useEffect(() => {
         if (!chain?.id) return
@@ -25,8 +27,6 @@ const Header = () => {
         }
         dispatch(createContractCredentials(chainConfiguration));
     }, [chain?.id])
-
-    console.log(contract)
 
     return (
         <div className="py-5 px-56 flex items-center justify-between">

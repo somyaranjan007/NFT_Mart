@@ -1,6 +1,6 @@
 import { Inter } from "next/font/google";
 import "./globals.css";
-import Header from "@/components/Header";
+import Header from "@/components/Header/Header";
 
 import StoreProvider from "./StoreProvider";
 import Web3ModalProvider from "./WalletProvider"
@@ -15,12 +15,15 @@ import { config } from '@/config'
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata = {
-  title: "NFT-Mart",
-  description: "NFT Revolution with NFT-Mart",
+  title: "Canvas",
+  description: "NFT Revolution with Canvas",
 };
 
 export default function RootLayout({ children }) {
+
   const initialState = cookieToInitialState(config, headers().get('cookie'))
+  
+
   return (
     <html lang="en">
       <body className={inter.className}>
