@@ -21,10 +21,12 @@ import Button from "../Button/Button";
 
 import Logo from "@/assets/NFT_Logo.jpg";
 import ProfileImage from "@/assets/Profile.jpg";
+import Search from "./Search";
 
 const Header = () => {
 
     const [openSidebar, setOpenSideBar] = useState(false);
+    const [openSearch, setOpenSearch] = useState(false); 
 
     const { open } = useWeb3Modal();
     const { walletInfo } = useWalletInfo();
@@ -48,6 +50,7 @@ const Header = () => {
     }, [chain?.id])
 
     const headerOpenClose = (section) => {
+        console.log(headerOpen.open);
         if (headerOpen.open === section) return
         setHeaderOpen({ open: section });
     }
@@ -70,8 +73,15 @@ const Header = () => {
             </div>
 
             <div className="flex items-center">
+
+                <div>
+                    <BsSearch className="text-[15px] text-gray-700" onClick={() => setOpenSearch(true)} />
+                    {openSearch && <Search setOpenSearch={setOpenSearch} />}
+                </div>
+
                 <div className="">
                     <MdNotifications onClick={() => headerOpenClose("Notification")} className=" cursor-pointer text-[20px] text-gray-700 ml-3" />
+                    {headerOpen.open === "Notification" && <Notification setHeaderOpen={setHeaderOpen} />}
                 </div>
 
                 <div>

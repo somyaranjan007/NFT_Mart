@@ -1,15 +1,15 @@
 import { Inter } from "next/font/google";
 import "./globals.css";
-import Header from "@/components/Header/Header";
 
 import StoreProvider from "./StoreProvider";
 import Web3ModalProvider from "./WalletProvider"
 
 import { headers } from 'next/headers'
-
 import { cookieToInitialState } from 'wagmi'
-
 import { config } from '@/config'
+
+import Header from "@/components/Header/HeaderUpdate";
+import Footer from "@/components/Footer/Footer";
 
 
 const inter = Inter({ subsets: ["latin"] });
@@ -22,7 +22,7 @@ export const metadata = {
 export default function RootLayout({ children }) {
 
   const initialState = cookieToInitialState(config, headers().get('cookie'))
-  
+
 
   return (
     <html lang="en">
@@ -31,6 +31,7 @@ export default function RootLayout({ children }) {
           <Web3ModalProvider initialState={initialState}>
             <Header />
             {children}
+            <Footer />
           </Web3ModalProvider>
         </StoreProvider>
       </body>
