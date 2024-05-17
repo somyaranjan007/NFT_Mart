@@ -1,17 +1,17 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.24;
 
-import "@openzeppelin/contracts/token/ERC721/IERC721.sol";
 import "@openzeppelin/contracts/utils/ReentrancyGuard.sol";
+import "@openzeppelin/contracts/token/ERC721/extensions/ERC721URIStorage.sol";
+import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
 
 /**
  * @title NFTMarketPlace
  * @dev A decentralized marketplace for trading ERC721 tokens.
  */
-contract NFTMarketPlace is ReentrancyGuard {
+contract NFTMarketPlace is ReentrancyGuard, ERC721URIStorage {
     event NFTMarketItemCreated(
         uint256 itemId,
-        address nftContract,
         uint256 tokenId,
         address seller,
         address owner,
@@ -21,7 +21,6 @@ contract NFTMarketPlace is ReentrancyGuard {
 
     event NFTMarketItemSold(
         uint256 itemId,
-        address nftContract,
         uint256 tokenId,
         address seller,
         address owner,
@@ -29,21 +28,21 @@ contract NFTMarketPlace is ReentrancyGuard {
         bool sold
     );
 
-    uint256 private _itemId;
-    uint256 private _itemsSold;
+    uint256 public _tokenIds;
+    uint256 public _itemId;
+    uint256 public _itemsSold;
     uint256 public listingPrice = 0.002 ether;
     address payable public owner;
 
     /**
      * @dev Initializes the contract setting the owner as the deployer.
      */
-    constructor() {
+    constructor() ERC721("Canvas NFT", "CNFT") {
         owner = payable(msg.sender);
     }
 
     struct NFTMarketItem {
         uint256 itemId;
-        address nftContract;
         uint256 tokenId;
         address payable seller;
         address payable owner;
@@ -56,12 +55,12 @@ contract NFTMarketPlace is ReentrancyGuard {
     /**
      * @dev Modifier to restrict access to functions only to the contract owner.
      * Requirements:
-     * - Caller must be the contract owner.
+     * - The caller must be the contract owner.
      */
     modifier onlyOwner() {
         require(
             msg.sender == owner,
-            "Only NFT market place owner can call this function"
+            "Only the NFT marketplace owner can call this function"
         );
         _;
     }
@@ -77,46 +76,64 @@ contract NFTMarketPlace is ReentrancyGuard {
      * @dev Updates the listing price.
      * @param _listingPrice The new listing price.
      * Requirements:
-     * - Caller must be the contract owner.
+     * - The caller must be the contract owner.
      */
     function updateListingPrice(uint256 _listingPrice) public onlyOwner {
         listingPrice = _listingPrice;
     }
 
     /**
-     * @dev Creates a new NFT market item.
-     * @param nftContract Address of the ERC721 contract.
-     * @param tokenId ID of the ERC721 token.
+     * @dev Creates a new NFT token.
+     * @param tokenURI URI of the token metadata.
      * @param price Price of the NFT.
+     * @return tokenIds ID of the newly created token.
      */
-    function createNFTMarketItem(
-        address nftContract,
-        uint256 tokenId,
+    function createToken(
+        string memory tokenURI,
         uint256 price
-    ) public payable nonReentrant {
+    ) public payable nonReentrant returns (uint256) {
         require(price > 0, "Price must be at least 1 wei");
         require(
             msg.value == listingPrice,
-            "Price must be equal to listing price"
+            "Price must be equal to the listing price"
         );
+
+        _tokenIds++;
+        _mint(msg.sender, _tokenIds);
+        _setTokenURI(_tokenIds, tokenURI);
+        setApprovalForAll(address(this), true);
+        createNFTMarketItem(_tokenIds, price, msg.sender);
+
+        return _tokenIds;
+    }
+
+    /**
+     * @dev Creates a new NFT market item.
+     * @param tokenId ID of the ERC721 token.
+     * @param price Price of the NFT.
+     * @param seller Address of the minter.
+     */
+    function createNFTMarketItem(
+        uint256 tokenId,
+        uint256 price,
+        address seller
+    ) public {
         _itemId++;
         tidToMarket[_itemId] = NFTMarketItem(
             _itemId,
-            nftContract,
             tokenId,
-            payable(msg.sender),
+            payable(seller),
             payable(address(0)),
             price,
             false
         );
 
-        IERC721(nftContract).transferFrom(msg.sender, address(this), tokenId);
+        transferFrom(seller, address(this), tokenId);
 
         emit NFTMarketItemCreated(
             _itemId,
-            nftContract,
             tokenId,
-            msg.sender,
+            seller,
             address(0),
             price,
             false
@@ -130,11 +147,10 @@ contract NFTMarketPlace is ReentrancyGuard {
     function createNFTMarketSale(uint256 itemId) public payable {
         uint256 price = tidToMarket[itemId].price;
         uint256 tokenId = tidToMarket[itemId].tokenId;
-        address nftContract = tidToMarket[itemId].nftContract;
 
-        require(msg.value == price, "Please submit the price of nft!");
+        require(msg.value == price, "Please submit the asking price for the NFT");
         tidToMarket[itemId].seller.transfer(msg.value);
-        IERC721(nftContract).transferFrom(address(this), msg.sender, tokenId);
+        _transfer(address(this), msg.sender, tokenId);
         tidToMarket[itemId].owner = payable(msg.sender);
         tidToMarket[itemId].sold = true;
 
@@ -143,7 +159,6 @@ contract NFTMarketPlace is ReentrancyGuard {
         payable(owner).transfer(listingPrice);
         emit NFTMarketItemSold(
             itemId,
-            nftContract,
             tokenId,
             tidToMarket[itemId].seller,
             msg.sender,
@@ -153,7 +168,7 @@ contract NFTMarketPlace is ReentrancyGuard {
     }
 
     /**
-     * @dev Returns the unsold NFT Market Items.
+     * @dev Returns the unsold NFT market items.
      * @return An array of unsold NFTMarketItem structs.
      */
     function fetchUnsoldNFTMarketItems()
@@ -179,7 +194,7 @@ contract NFTMarketPlace is ReentrancyGuard {
     }
 
     /**
-     * @dev Returns the NFT Market Items owned by the caller.
+     * @dev Returns the NFT market items owned by the caller.
      * @return An array of NFTMarketItem structs owned by the caller.
      */
     function fetchMyNFT() public view returns (NFTMarketItem[] memory) {
@@ -207,7 +222,7 @@ contract NFTMarketPlace is ReentrancyGuard {
     }
 
     /**
-     * @dev Returns the NFT Market Items created by the caller.
+     * @dev Returns the NFT market items created by the caller.
      * @return An array of NFTMarketItem structs created by the caller.
      */
     function fetchMyCreatedNFT() public view returns (NFTMarketItem[] memory) {

@@ -15,35 +15,28 @@ describe("NFTMarketPlace and NFTContract Deployment", function () {
         const NFTMarketPlaceDeploy = await NFTMarketPlace.deploy();
         const NFTMarketPlaceAddress = await NFTMarketPlaceDeploy.getAddress();
 
-        const NFTContract = await ethers.getContractFactory("NFTContract");
-        const NFTContractDeploy = await NFTContract.deploy(NFTMarketPlaceAddress);
-        const NFTContractAddress = await NFTContractDeploy.getAddress();
-
         console.log({
             NFTMarketPlaceAddress,
-            NFTContractAddress
         })
 
         let listingPrice = await NFTMarketPlaceDeploy.getListingPrice();
         console.log(listingPrice);
 
         const price = await ethers.parseUnits('100', 'ether');
-        console.log(price);
+        console.log(typeof price);
 
         // create a new NFT
-        await NFTContractDeploy.connect(seller).createToken("");
+        await NFTMarketPlaceDeploy.connect(seller).createToken("URI", price.toString(), { value: listingPrice.toString() });
         console.log("seller", seller.address);
-        console.log(await (NFTContractDeploy.ownerOf(1)))
+        console.log(await (NFTMarketPlaceDeploy.ownerOf(1)));
+        console.log(NFTMarketPlaceAddress)
 
-        await NFTMarketPlaceDeploy.connect(seller).createNFTMarketItem(NFTContractAddress, 1, price, { value: listingPrice.toString() });
-
-        // check my created NFT Item 
         console.log(await NFTMarketPlaceDeploy.connect(seller).fetchMyCreatedNFT());
-        console.log("WHO: ", NFTMarketPlaceAddress, await (NFTContractDeploy.ownerOf(1)))
+        // console.log("WHO: ", NFTMarketPlaceAddress, await (NFTContractDeploy.ownerOf(1)))
 
         // create market sale 
         await NFTMarketPlaceDeploy.connect(owner).createNFTMarketSale(1, { value: price.toString() });
-        console.log("WHO: ", owner.address, await (NFTContractDeploy.ownerOf(1)))
+        console.log("WHO: ", owner.address, await (NFTMarketPlaceDeploy.ownerOf(1)))
 
     })
 

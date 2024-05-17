@@ -1,45 +1,6 @@
 {
   "_format": "hh-sol-cache-2",
   "files": {
-    "C:\\2024_Blockchain\\Projects\\NFT_MarketPlace\\client\\contracts\\NFTContract.sol": {
-      "lastModificationDate": 1715946755783,
-      "contentHash": "fa00eadc83abc206f89f049744085bfa",
-      "sourceName": "contracts/NFTContract.sol",
-      "solcConfig": {
-        "version": "0.8.24",
-        "settings": {
-          "evmVersion": "paris",
-          "optimizer": {
-            "enabled": false,
-            "runs": 200
-          },
-          "outputSelection": {
-            "*": {
-              "*": [
-                "abi",
-                "evm.bytecode",
-                "evm.deployedBytecode",
-                "evm.methodIdentifiers",
-                "metadata"
-              ],
-              "": [
-                "ast"
-              ]
-            }
-          }
-        }
-      },
-      "imports": [
-        "@openzeppelin/contracts/token/ERC721/ERC721.sol",
-        "@openzeppelin/contracts/token/ERC721/extensions/ERC721URIStorage.sol"
-      ],
-      "versionPragmas": [
-        "^0.8.24"
-      ],
-      "artifacts": [
-        "NFTContract"
-      ]
-    },
     "C:\\2024_Blockchain\\Projects\\NFT_MarketPlace\\client\\node_modules\\@openzeppelin\\contracts\\token\\ERC721\\extensions\\ERC721URIStorage.sol": {
       "lastModificationDate": 1715269000497,
       "contentHash": "50d770b698931f015309e77a750f54f6",
@@ -608,8 +569,8 @@
       "artifacts": []
     },
     "C:\\2024_Blockchain\\Projects\\NFT_MarketPlace\\client\\contracts\\NFTMarketPlace.sol": {
-      "lastModificationDate": 1715947450656,
-      "contentHash": "ad9031aed07cf335d20eaed986c6d63d",
+      "lastModificationDate": 1715970999300,
+      "contentHash": "6416c82f335f38ebd4c0f9bb15ce8823",
       "sourceName": "contracts/NFTMarketPlace.sol",
       "solcConfig": {
         "version": "0.8.24",
@@ -636,8 +597,9 @@
         }
       },
       "imports": [
-        "@openzeppelin/contracts/token/ERC721/IERC721.sol",
-        "@openzeppelin/contracts/utils/ReentrancyGuard.sol"
+        "@openzeppelin/contracts/utils/ReentrancyGuard.sol",
+        "@openzeppelin/contracts/token/ERC721/extensions/ERC721URIStorage.sol",
+        "@openzeppelin/contracts/token/ERC721/ERC721.sol"
       ],
       "versionPragmas": [
         "^0.8.24"
