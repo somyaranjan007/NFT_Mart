@@ -16,14 +16,14 @@ contract NFTContract is ERC721URIStorage {
      * @dev Initializes the contract and sets the marketplace contract address.
      * @param marketPlaceAddress Address of the marketplace contract.
      */
-    constructor(address marketPlaceAddress) ERC721("Gamer NFT", "GNFT") {
+    constructor(address marketPlaceAddress) ERC721("Canva NFT", "CNFT") {
         contractAddress = marketPlaceAddress;
     }
 
     /**
      * @dev Creates a new NFT token.
      * @param tokenURI URI of the token metadata.
-     * @return tokenId ID of the newly created token.
+     * @return tokenIds ID of the newly created token.
      */
     function createToken(string memory tokenURI) public returns (uint256) {
         _tokenIds++;

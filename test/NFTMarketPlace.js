@@ -36,7 +36,14 @@ describe("NFTMarketPlace and NFTContract Deployment", function () {
         console.log(await (NFTContractDeploy.ownerOf(1)))
 
         await NFTMarketPlaceDeploy.connect(seller).createNFTMarketItem(NFTContractAddress, 1, price, { value: listingPrice.toString() });
-        console.log(await NFTMarketPlaceDeploy.fetchMyCreatedNFT());
+
+        // check my created NFT Item 
+        console.log(await NFTMarketPlaceDeploy.connect(seller).fetchMyCreatedNFT());
+        console.log("WHO: ", NFTMarketPlaceAddress, await (NFTContractDeploy.ownerOf(1)))
+
+        // create market sale 
+        await NFTMarketPlaceDeploy.connect(owner).createNFTMarketSale(1, { value: price.toString() });
+        console.log("WHO: ", owner.address, await (NFTContractDeploy.ownerOf(1)))
 
     })
 

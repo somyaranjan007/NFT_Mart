@@ -2,12 +2,13 @@
 pragma solidity ^0.8.24;
 
 import "@openzeppelin/contracts/token/ERC721/IERC721.sol";
+import "@openzeppelin/contracts/utils/ReentrancyGuard.sol";
 
 /**
  * @title NFTMarketPlace
  * @dev A decentralized marketplace for trading ERC721 tokens.
  */
-contract NFTMarketPlace {
+contract NFTMarketPlace is ReentrancyGuard {
     event NFTMarketItemCreated(
         uint256 itemId,
         address nftContract,
@@ -92,7 +93,7 @@ contract NFTMarketPlace {
         address nftContract,
         uint256 tokenId,
         uint256 price
-    ) public payable {
+    ) public payable nonReentrant {
         require(price > 0, "Price must be at least 1 wei");
         require(
             msg.value == listingPrice,

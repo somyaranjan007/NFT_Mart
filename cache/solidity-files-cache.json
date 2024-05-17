@@ -2,8 +2,8 @@
   "_format": "hh-sol-cache-2",
   "files": {
     "C:\\2024_Blockchain\\Projects\\NFT_MarketPlace\\client\\contracts\\NFTContract.sol": {
-      "lastModificationDate": 1715341601557,
-      "contentHash": "d37357070054e74e83406dfd1b69b8bb",
+      "lastModificationDate": 1715946755783,
+      "contentHash": "fa00eadc83abc206f89f049744085bfa",
       "sourceName": "contracts/NFTContract.sol",
       "solcConfig": {
         "version": "0.8.24",
@@ -608,8 +608,8 @@
       "artifacts": []
     },
     "C:\\2024_Blockchain\\Projects\\NFT_MarketPlace\\client\\contracts\\NFTMarketPlace.sol": {
-      "lastModificationDate": 1715347836182,
-      "contentHash": "97811ef9908a20d39c7b92a2155aae55",
+      "lastModificationDate": 1715947450656,
+      "contentHash": "ad9031aed07cf335d20eaed986c6d63d",
       "sourceName": "contracts/NFTMarketPlace.sol",
       "solcConfig": {
         "version": "0.8.24",
@@ -636,13 +636,50 @@
         }
       },
       "imports": [
-        "@openzeppelin/contracts/token/ERC721/IERC721.sol"
+        "@openzeppelin/contracts/token/ERC721/IERC721.sol",
+        "@openzeppelin/contracts/utils/ReentrancyGuard.sol"
       ],
       "versionPragmas": [
         "^0.8.24"
       ],
       "artifacts": [
         "NFTMarketPlace"
+      ]
+    },
+    "C:\\2024_Blockchain\\Projects\\NFT_MarketPlace\\client\\node_modules\\@openzeppelin\\contracts\\utils\\ReentrancyGuard.sol": {
+      "lastModificationDate": 1715269000626,
+      "contentHash": "a92331adac11b453a4de0323fc948119",
+      "sourceName": "@openzeppelin/contracts/utils/ReentrancyGuard.sol",
+      "solcConfig": {
+        "version": "0.8.24",
+        "settings": {
+          "evmVersion": "paris",
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [],
+      "versionPragmas": [
+        "^0.8.20"
+      ],
+      "artifacts": [
+        "ReentrancyGuard"
       ]
     }
   }
